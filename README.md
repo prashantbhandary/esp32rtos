@@ -2,7 +2,7 @@
 
 This repository contains various examples of FreeRTOS functionality on ESP32 microcontrollers. The project demonstrates core FreeRTOS concepts including task creation, scheduling, synchronization, and inter-task communication.
 
-![alt text](image.png)
+![alt text](images\image.png)
 ## Project Structure
 
 The project contains multiple standalone programs, each demonstrating different ESP32 and FreeRTOS capabilities:
