@@ -2,7 +2,9 @@
 
 This repository contains various examples of FreeRTOS functionality on ESP32 microcontrollers. The project demonstrates core FreeRTOS concepts including task creation, scheduling, synchronization, and inter-task communication.
 
-![alt text](image.png)
+
+![alt text](images/image.png)
+
 ## Project Structure
 
 The project contains multiple standalone programs, each demonstrating different ESP32 and FreeRTOS capabilities:
@@ -105,6 +107,36 @@ Shows how to create, suspend, resume, and delete tasks in FreeRTOS.
 - Demonstrates task suspension and resumption
 - Shows how to delete a task
 
+### mutex.cpp - Race Condition and Mutex Synchronization
+
+Demonstrates race conditions in concurrent programming and how to solve them using mutexes (mutual exclusion semaphores).
+
+- Two tasks attempt to increment the same shared counter
+- Without protection, race conditions occur when tasks interfere with each other
+- Mutex protection ensures that only one task can access the shared resource at a time
+- Demonstrates the proper use of `xSemaphoreTake()` and `xSemaphoreGive()`
+
+**Race Condition Explained:**
+A race condition occurs when multiple tasks try to read, modify, and write shared data concurrently:
+1. Task1 reads the counter (value = 5)
+2. Task2 reads the counter (also sees value = 5)
+3. Task1 increments and writes back (counter = 6)
+4. Task2 increments and writes back (counter = 6) - the increment from Task1 is lost!
+
+**Mutex Solution:**
+```cpp
+if (xSemaphoreTake(mutex, timeout) == pdTRUE) {
+    // Critical section - protected code
+    int local = sharedCounter;
+    local++;
+    sharedCounter = local;
+    
+    xSemaphoreGive(mutex); // Release the mutex
+}
+```
+
+This ensures only one task can update the counter at a time, preventing data corruption.
+
 ## FreeRTOS Concepts Demonstrated
 
 1. **Task Creation**: Using `xTaskCreatePinnedToCore()` to create tasks
@@ -113,15 +145,18 @@ Shows how to create, suspend, resume, and delete tasks in FreeRTOS.
 4. **Task Synchronization**: Using delays and priorities to coordinate tasks
 5. **Inter-task Communication**: Sharing data between tasks with global variables
 6. **Core Pinning**: Specifying which CPU core runs each task
+7. **Race Conditions**: Understanding and identifying race conditions in concurrent systems
+8. **Mutex Semaphores**: Using mutexes to protect shared resources and prevent race conditions
+9. **Critical Sections**: Implementing protected code regions that cannot be interrupted by other tasks
 
 ## Future Additions
 
 This project will continue to expand with more examples of FreeRTOS features:
-- inter-task communication
-- Semaphores and mutexes for resource management
+- Other types of inter-task communication
+- Binary semaphores and counting semaphores
 - Task notifications
-- Events
-- timers
+- Event groups
+- Software timers
 
 ## Author
 
